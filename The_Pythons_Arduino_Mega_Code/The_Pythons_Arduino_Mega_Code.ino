@@ -27,14 +27,14 @@ void setup() {
 }
 
 void loop() {
-//  digitalWrite(l_f_dir, LOW);//counter-clock
+//  digitalWrite(l_f_dir, LOW);//counter-clock//left back
 //  analogWrite(l_f_pwm, move_speed);
-//  digitalWrite(l_b_dir, LOW);//counter-clock
+//  digitalWrite(l_b_dir, LOW);//counter-clock//left front
 //  analogWrite(l_b_pwm, move_speed);
 //
-//  digitalWrite(r_f_dir, HIGH);//clock
+//  digitalWrite(r_f_dir, HIGH);//clock//right front
 //  analogWrite(r_f_pwm, move_speed);
-//  digitalWrite(r_b_dir, HIGH);//clock
+//  digitalWrite(r_b_dir, HIGH);//clock//right back
 //  analogWrite(r_b_pwm, move_speed);
   delay(5000);
   moveWheels('f');//forward
