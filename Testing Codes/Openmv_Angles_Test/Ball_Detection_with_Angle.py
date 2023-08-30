@@ -1,4 +1,4 @@
-# Untitled - By: Zaki - Tue Aug 29 2023
+# Ball_Detection_with_Angle - By: Ahmad Zaki - Tue Aug 29 2023
 
 import sensor, image, time, math
 from pyb import UART
