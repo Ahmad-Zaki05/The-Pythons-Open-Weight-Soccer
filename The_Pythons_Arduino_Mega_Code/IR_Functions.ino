@@ -1,4 +1,4 @@
-void ir_read()
+void read_IR()
 {
   ir_read_FR = analogRead(ir_FR);
   ir_read_RL = analogRead(ir_RL);
