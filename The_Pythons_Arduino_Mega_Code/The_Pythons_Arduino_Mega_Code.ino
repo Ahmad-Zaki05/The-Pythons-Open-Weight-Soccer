@@ -1,3 +1,5 @@
+#include <math.h>
+
 /*** Cytron pins ***/
 byte l_f_dir = 4;
 byte l_f_pwm = 5; 
@@ -10,7 +12,7 @@ byte r_f_dir = 10;
 byte r_f_pwm = 11; 
 /*******************/
 
-#define move_speed 60
+#define move_speed 255
 
 /*** IR pins & variables ***/
 #define ir_FR A0
@@ -65,7 +67,7 @@ void setup() {
   pinMode(ir_BR, INPUT);
   pinMode(ir_RR, INPUT);
   pinMode(ir_FL, INPUT);
-  delay(3000);
+  delay(7000);
   
 }
 
@@ -73,12 +75,13 @@ void loop() {
   
   read_Camera();
 //  read_IR();
-  maintain_Heading();
+//  maintain_Heading();
 
 
 /***Tracking Ball (Angle)***/
-//  for (short i = 0; i < 360; i += 90) {
-//    angular_Motion(i, 100); 
+//angular_Motion(90, 120);
+//  for (short i = 0; i < 360; i += 45) {
+//    angular_Motion(i, 120); 
 //    delay(1000);   
 //  }
 /***************************/
