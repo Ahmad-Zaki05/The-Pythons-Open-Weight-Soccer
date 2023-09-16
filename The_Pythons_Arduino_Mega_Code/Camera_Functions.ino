@@ -10,7 +10,16 @@ void read_Camera(){
 //    Serial.println(cam_angle_str);
     if (cam_angle_str == "S") {
       
-      moveWheels('s');//stop
+//      angular_Motion(0, 0);
+      digitalWrite(l_f_dir, LOW);
+      analogWrite(l_f_pwm, 0);
+      digitalWrite(l_b_dir, LOW);
+      analogWrite(l_b_pwm, 0);
+    
+      digitalWrite(r_f_dir, LOW);
+      analogWrite(r_f_pwm, 0);
+      digitalWrite(r_b_dir, LOW);
+      analogWrite(r_b_pwm, 0);
     }
     else {
       cam_angle = cam_angle_str.toInt();
@@ -65,4 +74,17 @@ void read_Camera(){
 //      }
     }
   }
+//  else {
+//    digitalWrite(l_f_dir, LOW);
+//      analogWrite(l_f_pwm, 0);
+//      digitalWrite(l_b_dir, LOW);
+//      analogWrite(l_b_pwm, 0);
+//    
+//      digitalWrite(r_f_dir, LOW);
+//      analogWrite(r_f_pwm, 0);
+//      digitalWrite(r_b_dir, LOW);
+//      analogWrite(r_b_pwm, 0);
+//
+//      Serial.println("I am in the else");
+//  }
 }
