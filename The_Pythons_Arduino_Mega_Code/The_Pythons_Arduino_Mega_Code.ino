@@ -67,7 +67,7 @@ void setup() {
   pinMode(ir_BR, INPUT);
   pinMode(ir_RR, INPUT);
   pinMode(ir_FL, INPUT);
-  delay(7000);
+  delay(2000);
   
 }
 

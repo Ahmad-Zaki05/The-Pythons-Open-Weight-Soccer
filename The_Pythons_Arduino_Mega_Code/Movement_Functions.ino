@@ -134,6 +134,109 @@ void moveWheels(char dir){
   }
 }
 
+//void angular_Motion(short b_angle, byte spd) {
+////  Serial.print("The angle is: ");
+////  Serial.println(angle);
+//
+//  byte r_f_sp, r_b_sp, l_f_sp, l_b_sp;
+//  bool r_f_d, r_b_d, l_f_d, l_b_d;
+//  
+//  if ((b_angle >= 0) && (b_angle <= 90)) {
+////    Serial.println("here 1");
+//    digitalWrite(r_f_dir, HIGH);
+//    analogWrite(r_f_pwm, spd);
+//    digitalWrite(l_b_dir, LOW);
+//    analogWrite(l_b_pwm, spd);
+//    if (b_angle == 45) {
+//      analogWrite(l_f_pwm, 0);
+//      analogWrite(r_b_pwm, 0);
+//      return;
+//    }
+//    byte spd_ang = (spd * abs(b_angle - 45)) / 45;
+////    Serial.println(spd_ang);
+//    analogWrite(l_f_pwm, spd_ang);
+//    analogWrite(r_b_pwm, spd_ang);
+//    if (b_angle < 45) {
+//      digitalWrite(l_f_dir, HIGH);
+//      digitalWrite(r_b_dir, LOW);
+//    }
+//    else {
+//      digitalWrite(l_f_dir, LOW);
+//      digitalWrite(r_b_dir, HIGH);
+//    }
+//  }
+//  else if ((b_angle >= 90) && (b_angle <= 180)) {
+//    // Serial.println("here 2");
+//    digitalWrite(r_b_dir, HIGH);
+//    analogWrite(r_b_pwm, spd);
+//    digitalWrite(l_f_dir, LOW);
+//    analogWrite(l_f_pwm, spd);
+//    if (b_angle == 135) {
+//      analogWrite(r_f_pwm, 0);
+//      analogWrite(l_b_pwm, 0);
+//      return;
+//    }
+//    byte spd_ang = (spd * abs(b_angle - 135)) / 45;
+//    analogWrite(r_f_pwm, spd_ang);
+//    analogWrite(l_b_pwm, spd_ang);
+//    if (b_angle < 135) {
+//      digitalWrite(r_f_dir, HIGH);
+//      digitalWrite(l_b_dir, LOW);
+//    }
+//    else {
+//      digitalWrite(r_f_dir, LOW);
+//      digitalWrite(l_b_dir, HIGH);
+//    }
+//  } 
+//  else if ((b_angle >= 180) && (b_angle <= 270)) {
+//    // Serial.println("here 3");
+//    digitalWrite(r_f_dir, LOW);
+//    analogWrite(r_f_pwm, spd);
+//    digitalWrite(l_b_dir, HIGH);
+//    analogWrite(l_b_pwm, spd);
+//    if (b_angle == 225) {
+//      analogWrite(l_f_pwm, 0);
+//      analogWrite(r_b_pwm, 0);
+//      return;
+//    }
+//    byte spd_ang = (spd * abs(b_angle - 225)) / 45;
+//    analogWrite(l_f_pwm, spd_ang);
+//    analogWrite(r_b_pwm, spd_ang);
+//    if (b_angle < 225) {
+//      digitalWrite(l_f_dir, LOW);
+//      digitalWrite(r_b_dir, HIGH);
+//    }
+//    else {
+//      // Serial.println("here 10");
+//      digitalWrite(l_f_dir, HIGH);
+//      digitalWrite(r_b_dir, LOW);
+//    }
+//  }
+//  else if ((b_angle >= 270) && (b_angle <= 360)) {
+//    // Serial.println("here 4");
+//    digitalWrite(r_b_dir, LOW);
+//    analogWrite(r_b_pwm, spd);
+//    digitalWrite(l_f_dir, HIGH);
+//    analogWrite(l_f_pwm, spd);
+//    if (b_angle == 315) {
+//      analogWrite(r_f_pwm, 0);
+//      analogWrite(l_b_pwm, 0);
+//      return;
+//    }
+//    byte spd_ang = (spd * abs(b_angle - 315)) / 45;
+//    analogWrite(r_f_pwm, spd_ang);
+//    analogWrite(l_b_pwm, spd_ang);
+//    if (b_angle < 315) {
+//      digitalWrite(r_f_dir, LOW);
+//      digitalWrite(l_b_dir, HIGH);
+//    }
+//    else {
+//      digitalWrite(r_f_dir, HIGH);
+//      digitalWrite(l_b_dir, LOW);
+//    }
+//  }
+//}
+
 void angular_Motion(short b_angle, byte spd) {
 //  Serial.print("The angle is: ");
 //  Serial.println(angle);
@@ -141,96 +244,133 @@ void angular_Motion(short b_angle, byte spd) {
   byte r_f_sp, r_b_sp, l_f_sp, l_b_sp;
   bool r_f_d, r_b_d, l_f_d, l_b_d;
   
-  if ((b_angle >= 0) && (b_angle <= 90)) {
-//    Serial.println("here 1");
+  if ((b_angle >= 0) && (b_angle <= 90)) { // Left top quad
+    
+    byte spd_rot_clock = max(40, (spd - (spd * ((90 - b_angle) * 0.02))));
+    byte spd_rot_counter_clock = min(254, (spd + (spd * ((90 - b_angle) * 0.02))));
+//    Serial.println("Left Top Quad : ");
+//    Serial.print("b_angle: ");
+//    Serial.println(b_angle);
+//    Serial.print("spd: ");
+//    Serial.print(spd);
+//    Serial.print("\tspd_rot_clock: ");
+//    Serial.print(spd_rot_clock);
+//    Serial.print("\tspd_rot_counter_clock: ");
+//    Serial.println(spd_rot_counter_clock);
+    
     digitalWrite(r_f_dir, HIGH);
-    analogWrite(r_f_pwm, spd);
+    analogWrite(r_f_pwm, spd_rot_counter_clock);
     digitalWrite(l_b_dir, LOW);
-    analogWrite(l_b_pwm, spd);
+    analogWrite(l_b_pwm, spd_rot_clock);
     if (b_angle == 45) {
       analogWrite(l_f_pwm, 0);
       analogWrite(r_b_pwm, 0);
       return;
     }
     byte spd_ang = (spd * abs(b_angle - 45)) / 45;
+    byte spd_ang_rot_clock = max(40, (spd_ang - (spd_ang * ((90 - b_angle) * 0.02))));
+    byte spd_ang_rot_counter_clock = min(254, (spd_ang + (spd_ang * ((90 - b_angle) * 0.02))));
+//    Serial.print("spd_ang: ");
+//    Serial.print(spd_ang);
+//    Serial.print("\tspd_ang_rot_clock: ");
+//    Serial.print(spd_ang_rot_clock);
+//    Serial.print("\tspd_ang_rot_counter_clock: ");
+//    Serial.println(spd_ang_rot_counter_clock);
 //    Serial.println(spd_ang);
-    analogWrite(l_f_pwm, spd_ang);
-    analogWrite(r_b_pwm, spd_ang);
     if (b_angle < 45) {
+      analogWrite(l_f_pwm, spd_ang_rot_counter_clock);
+      analogWrite(r_b_pwm, spd_ang_rot_clock);
       digitalWrite(l_f_dir, HIGH);
       digitalWrite(r_b_dir, LOW);
     }
     else {
+      analogWrite(l_f_pwm, spd_ang_rot_clock);
+      analogWrite(r_b_pwm, spd_ang_rot_counter_clock);
       digitalWrite(l_f_dir, LOW);
       digitalWrite(r_b_dir, HIGH);
     }
   }
-  else if ((b_angle >= 90) && (b_angle <= 180)) {
-    // Serial.println("here 2");
+  else if ((b_angle >= 90) && (b_angle <= 180)) { // Right top quad
+    byte spd_rot_clock = max(40, (spd - (spd * ((b_angle - 90) * 0.02))));
+    byte spd_rot_counter_clock = min(254, (spd + (spd * ((b_angle - 90) * 0.02))));
     digitalWrite(r_b_dir, HIGH);
-    analogWrite(r_b_pwm, spd);
+    analogWrite(r_b_pwm, spd_rot_clock);
     digitalWrite(l_f_dir, LOW);
-    analogWrite(l_f_pwm, spd);
+    analogWrite(l_f_pwm, spd_rot_counter_clock);
     if (b_angle == 135) {
       analogWrite(r_f_pwm, 0);
       analogWrite(l_b_pwm, 0);
       return;
     }
     byte spd_ang = (spd * abs(b_angle - 135)) / 45;
-    analogWrite(r_f_pwm, spd_ang);
-    analogWrite(l_b_pwm, spd_ang);
+    byte spd_ang_rot_clock = max(40, (spd_ang - (spd_ang * ((b_angle - 90) * 0.02))));
+    byte spd_ang_rot_counter_clock = min(254, (spd_ang + (spd_ang * ((b_angle - 90) * 0.02))));
+    
     if (b_angle < 135) {
+      analogWrite(r_f_pwm, spd_ang_rot_clock);
+      analogWrite(l_b_pwm, spd_ang_rot_counter_clock);
       digitalWrite(r_f_dir, HIGH);
       digitalWrite(l_b_dir, LOW);
     }
     else {
+      analogWrite(r_f_pwm, spd_ang_rot_counter_clock);
+      analogWrite(l_b_pwm, spd_ang_rot_clock);
       digitalWrite(r_f_dir, LOW);
       digitalWrite(l_b_dir, HIGH);
     }
   } 
-  else if ((b_angle >= 180) && (b_angle <= 270)) {
-    // Serial.println("here 3");
+  else if ((b_angle >= 180) && (b_angle <= 270)) { // Right Bottom quad
+    byte spd_rot_clock = max(40, (spd - (spd * ((b_angle - 90) * 0.02))));
+    byte spd_rot_counter_clock = min(254, (spd + (spd * ((b_angle - 90) * 0.02))));
     digitalWrite(r_f_dir, LOW);
-    analogWrite(r_f_pwm, spd);
+    analogWrite(r_f_pwm, spd_rot_counter_clock);
     digitalWrite(l_b_dir, HIGH);
-    analogWrite(l_b_pwm, spd);
+    analogWrite(l_b_pwm, spd_rot_clock);
     if (b_angle == 225) {
       analogWrite(l_f_pwm, 0);
       analogWrite(r_b_pwm, 0);
       return;
     }
     byte spd_ang = (spd * abs(b_angle - 225)) / 45;
-    analogWrite(l_f_pwm, spd_ang);
-    analogWrite(r_b_pwm, spd_ang);
+    byte spd_ang_rot_clock = max(40, (spd_ang - (spd_ang * ((b_angle - 90) * 0.02))));
+    byte spd_ang_rot_counter_clock = min(254, (spd_ang + (spd_ang * ((b_angle - 90) * 0.02))));
     if (b_angle < 225) {
+      analogWrite(l_f_pwm, spd_ang_rot_counter_clock);
+      analogWrite(r_b_pwm, spd_ang_rot_clock);
       digitalWrite(l_f_dir, LOW);
       digitalWrite(r_b_dir, HIGH);
     }
     else {
-      // Serial.println("here 10");
+      analogWrite(l_f_pwm, spd_ang_rot_clock);
+      analogWrite(r_b_pwm, spd_ang_rot_counter_clock);
       digitalWrite(l_f_dir, HIGH);
       digitalWrite(r_b_dir, LOW);
     }
   }
-  else if ((b_angle >= 270) && (b_angle <= 360)) {
-    // Serial.println("here 4");
+  else if ((b_angle >= 270) && (b_angle <= 360)) { // Left bottom quad
+    byte spd_rot_clock = max(40, (spd - (spd * ((360 - b_angle + 90) * 0.02))));
+    byte spd_rot_counter_clock = min(254, (spd + (spd * ((360 - b_angle + 90) * 0.02))));
     digitalWrite(r_b_dir, LOW);
-    analogWrite(r_b_pwm, spd);
+    analogWrite(r_b_pwm, spd_rot_clock);
     digitalWrite(l_f_dir, HIGH);
-    analogWrite(l_f_pwm, spd);
+    analogWrite(l_f_pwm, spd_rot_counter_clock);
     if (b_angle == 315) {
       analogWrite(r_f_pwm, 0);
       analogWrite(l_b_pwm, 0);
       return;
     }
     byte spd_ang = (spd * abs(b_angle - 315)) / 45;
-    analogWrite(r_f_pwm, spd_ang);
-    analogWrite(l_b_pwm, spd_ang);
+    byte spd_ang_rot_clock = max(40, (spd_ang - (spd_ang * ((360 - b_angle + 90) * 0.02))));
+    byte spd_ang_rot_counter_clock = min(254, (spd_ang + (spd_ang * ((360 - b_angle + 90) * 0.02))));
     if (b_angle < 315) {
+      analogWrite(r_f_pwm, spd_ang_rot_clock);
+      analogWrite(l_b_pwm, spd_ang_rot_counter_clock);
       digitalWrite(r_f_dir, LOW);
       digitalWrite(l_b_dir, HIGH);
     }
     else {
+      analogWrite(r_f_pwm, spd_ang_rot_counter_clock);
+      analogWrite(l_b_pwm, spd_ang_rot_clock);
       digitalWrite(r_f_dir, HIGH);
       digitalWrite(l_b_dir, LOW);
     }
