@@ -2,7 +2,7 @@
 // Left Back    --> counter-clock   LOW
 // Right Forward --> clock          HIGH
 // Right Back    --> clock          HIGH
-void moveWheels(char dir){
+void moveWheels(char dir, int move_speed){
   switch(dir){
     case 'f': // Forward
       Serial.println("Forward");
@@ -291,32 +291,32 @@ void angular_Motion(short b_angle, byte spd) {
       }
     }
   }
-  if ((cam_angle >= 105) && (cam_angle <= 270)) {
-    if (l_f_d == LOW) l_f_sp = min(254, (l_f_sp + (l_f_sp * (ang_diff * 0.02))));
-    else l_f_sp = max(40, (l_f_sp - (l_f_sp * (ang_diff * 0.02))));
-
-    if (l_b_d == LOW) l_b_sp = min(254, (l_b_sp + (l_b_sp * (ang_diff * 0.02))));
-    else l_b_sp = max(40, (l_b_sp - (l_b_sp * (ang_diff * 0.02))));
-
-    if (r_f_d == LOW) r_f_sp = min(254, (r_f_sp + (r_f_sp * (ang_diff * 0.02))));
-    else r_f_sp = max(40, (r_f_sp - (r_f_sp * (ang_diff * 0.02))));
-
-    if (r_b_d == LOW) r_b_sp = min(254, (r_b_sp + (r_b_sp * (ang_diff * 0.02))));
-    else r_b_sp = max(40, (r_b_sp - (r_b_sp * (ang_diff * 0.02))));
-  }
-  else if ((cam_angle <= 75) || (cam_angle > 270)) {
-    if (l_f_d == HIGH) l_f_sp = min(254, (l_f_sp + (l_f_sp * (ang_diff * 0.02))));
-    else l_f_sp = max(40, (l_f_sp - (l_f_sp * (ang_diff * 0.02))));
-
-    if (l_b_d == HIGH) l_b_sp = min(254, (l_b_sp + (l_b_sp * (ang_diff * 0.02))));
-    else l_b_sp = max(40, (l_b_sp - (l_b_sp * (ang_diff * 0.02))));
-
-    if (r_f_d == HIGH) r_f_sp = min(254, (r_f_sp + (r_f_sp * (ang_diff * 0.02))));
-    else r_f_sp = max(40, (r_f_sp - (r_f_sp * (ang_diff * 0.02))));
-
-    if (r_b_d == HIGH) r_b_sp = min(254, (r_b_sp + (r_b_sp * (ang_diff * 0.02))));
-    else r_b_sp = max(40, (r_b_sp - (r_b_sp * (ang_diff * 0.02))));
-  }
+//  if ((cam_angle >= 105) && (cam_angle <= 270)) {
+//    if (l_f_d == LOW) l_f_sp = min(254, (l_f_sp + (l_f_sp * (ang_diff * 0.02))));
+//    else l_f_sp = max(40, (l_f_sp - (l_f_sp * (ang_diff * 0.02))));
+//
+//    if (l_b_d == LOW) l_b_sp = min(254, (l_b_sp + (l_b_sp * (ang_diff * 0.02))));
+//    else l_b_sp = max(40, (l_b_sp - (l_b_sp * (ang_diff * 0.02))));
+//
+//    if (r_f_d == LOW) r_f_sp = min(254, (r_f_sp + (r_f_sp * (ang_diff * 0.02))));
+//    else r_f_sp = max(40, (r_f_sp - (r_f_sp * (ang_diff * 0.02))));
+//
+//    if (r_b_d == LOW) r_b_sp = min(254, (r_b_sp + (r_b_sp * (ang_diff * 0.02))));
+//    else r_b_sp = max(40, (r_b_sp - (r_b_sp * (ang_diff * 0.02))));
+//  }
+//  else if ((cam_angle <= 75) || (cam_angle > 270)) {
+//    if (l_f_d == HIGH) l_f_sp = min(254, (l_f_sp + (l_f_sp * (ang_diff * 0.02))));
+//    else l_f_sp = max(40, (l_f_sp - (l_f_sp * (ang_diff * 0.02))));
+//
+//    if (l_b_d == HIGH) l_b_sp = min(254, (l_b_sp + (l_b_sp * (ang_diff * 0.02))));
+//    else l_b_sp = max(40, (l_b_sp - (l_b_sp * (ang_diff * 0.02))));
+//
+//    if (r_f_d == HIGH) r_f_sp = min(254, (r_f_sp + (r_f_sp * (ang_diff * 0.02))));
+//    else r_f_sp = max(40, (r_f_sp - (r_f_sp * (ang_diff * 0.02))));
+//
+//    if (r_b_d == HIGH) r_b_sp = min(254, (r_b_sp + (r_b_sp * (ang_diff * 0.02))));
+//    else r_b_sp = max(40, (r_b_sp - (r_b_sp * (ang_diff * 0.02))));
+//  }
   Serial.print("l_f_d = ");
   Serial.print(l_f_d);
   Serial.print("\tl_b_d = ");
@@ -348,10 +348,10 @@ void angular_Motion(short b_angle, byte spd) {
 void maintain_Heading(){
   read_Nano();
   if(robot_heading > 5){
-    moveWheels('n');//rotate left
+    moveWheels('n', 120);//rotate left
   }
   else if(robot_heading < -5){
-    moveWheels('m');//rotate right
+    moveWheels('m', 120);//rotate right
   }
 //  else
 //  {

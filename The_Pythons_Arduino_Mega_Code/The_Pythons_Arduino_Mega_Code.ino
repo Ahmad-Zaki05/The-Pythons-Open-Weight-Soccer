@@ -12,7 +12,7 @@ byte r_f_dir = 10;
 byte r_f_pwm = 11; 
 /*******************/
 
-#define move_speed 255
+//#define move_speed 100
 
 /*** IR pins & variables ***/
 #define ir_FR A0
@@ -101,27 +101,28 @@ void loop() {
 //  analogWrite(r_f_pwm, move_speed);
 //  digitalWrite(r_b_dir, HIGH);//clock
 //  analogWrite(r_b_pwm, move_speed);
-//  moveWheels('f');//forward
+
+//  moveWheels('f', 120);//forward
 //  delay(2000);
-//  moveWheels('b');//backward
+//  moveWheels('b', 120);//backward
 //  delay(2000);
-//  moveWheels('r');//right
+//  moveWheels('r', 120);//right
 //  delay(2000);
-//  moveWheels('l');//back
+//  moveWheels('l', 120);//back
 //  delay(2000);
-//  moveWheels('y');//diagonal forward right
+//  moveWheels('y', 120);//diagonal forward right
 //  delay(2000);
-//  moveWheels('h');//diagonal backward right
+//  moveWheels('h', 120);//diagonal backward right
 //  delay(2000);
-//  moveWheels('t');//diagonal forward left
+//  moveWheels('t', 120);//diagonal forward left
 //  delay(2000);
-//  moveWheels('g');//diagonal backward left
+//  moveWheels('g', 120);//diagonal backward left
 //  delay(2000);
-//  moveWheels('m');//rotate right
+//  moveWheels('m', 120);//rotate right
 //  delay(2000);
-//  moveWheels('n');//rotate left
+//  moveWheels('n', 120);//rotate left
 //  delay(2000);
-//  moveWheels('s');//stop
+//  moveWheels('s', 120);//stop
 //  delay(2000);
 /********************/
 }
