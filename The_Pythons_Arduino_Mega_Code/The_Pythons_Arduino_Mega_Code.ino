@@ -1,18 +1,19 @@
 #include <math.h>
+#include<Servo.h>
 
 /*** Cytron pins ***/
-byte l_f_dir = 4;
-byte l_f_pwm = 5; 
-byte l_b_dir = 2; 
-byte l_b_pwm = 3; 
+byte l_f_dir = 6;
+byte l_f_pwm = 7;
+byte l_b_dir = 8;
+byte l_b_pwm = 9;
 
-byte r_b_dir = 8; 
-byte r_b_pwm = 9; 
-byte r_f_dir = 10; 
-byte r_f_pwm = 11; 
+byte r_b_dir = 2;
+byte r_b_pwm = 3;
+byte r_f_dir = 4;
+byte r_f_pwm = 5;
 /*******************/
 
-//#define move_speed 100
+#define move_s 80
 
 /*** IR pins & variables ***/
 #define ir_FR A0
@@ -35,14 +36,33 @@ int ir_read_FL = 0;
 
 /*** Camera variables ***/
 char camera_char;
-String cam_angle_str;
-int cam_angle;
+String cam_angle_str = "S";
+short cam_angle;
 /************************/
 
 /*** Nano variables ***/
 String received_imu_angle;
-int robot_heading = 0;
+short robot_heading = 0;
 /**********************/
+
+/*** PID variables ***/
+float error = 0.0;
+float previousError = 0.0;
+float integral = 0.0;
+
+float Kp = 0.65;  // Proportional gain // 0.96  // kpc = 1.6
+float Ki = 0.0;  // Integral gain    // 0.002
+float Kd = 0.01; // Derivative gain    // 0.08
+
+float setpoint = 0.0; // Setpoint for the heading
+/*********************/
+
+bool call_ang = false;
+
+//#define Solenoid 25
+
+//Servo Brushless;
+Servo dribbler;
 
 void setup() {
   Serial.begin(115200);
@@ -68,61 +88,37 @@ void setup() {
   pinMode(ir_RR, INPUT);
   pinMode(ir_FL, INPUT);
   delay(2000);
-  
+
+  dribbler.attach(10, 1000, 2000);  // attaches the servo on pin 9 to the servo object
+  dribbler.write(180);
+  delay(2000);
+  dribbler.write(0);
+  delay(2000);
+
+  dribbler.write(40);
+
+  //  pinMode(Solenoid,OUTPUT);
+  //
+  //  Brushless.attach(12);
+  //  Brushless.writeMicroseconds(2000);
+  //  Brushless.writeMicroseconds(1000);
+
+  for (byte i = 0; i < 50;) {
+    if (Serial3.available()) {
+      i++;
+      //Serial.print("in for 1\n");
+    }
+  }
+  for (byte i = 0; i < 50;) {
+    if (Serial2.available()) {
+      i++;
+      //Serial.print("in for 2\n");
+    }
+  }
 }
-
 void loop() {
-  
   read_Camera();
-//  read_IR();
-//  maintain_Heading();
-
-
-/***Tracking Ball (Angle)***/
-//angular_Motion(90, 120);
-//  for (short i = 0; i < 360; i += 45) {
-//    angular_Motion(i, 120); 
-//    delay(1000);   
-//  }
-/***************************/
-
-/***Tracking Ball (Regions)***/
-//moveWheels(camera_char);
-/*****************************/
-
-/***Testing Motion***/
-//  delay(5000);
-//  digitalWrite(l_f_dir, LOW);//counter-clock
-//  analogWrite(l_f_pwm, move_speed);
-//  digitalWrite(l_b_dir, LOW);//counter-clock
-//  analogWrite(l_b_pwm, move_speed);
-//
-//  digitalWrite(r_f_dir, HIGH);//clock
-//  analogWrite(r_f_pwm, move_speed);
-//  digitalWrite(r_b_dir, HIGH);//clock
-//  analogWrite(r_b_pwm, move_speed);
-
-//  moveWheels('f', 120);//forward
-//  delay(2000);
-//  moveWheels('b', 120);//backward
-//  delay(2000);
-//  moveWheels('r', 120);//right
-//  delay(2000);
-//  moveWheels('l', 120);//back
-//  delay(2000);
-//  moveWheels('y', 120);//diagonal forward right
-//  delay(2000);
-//  moveWheels('h', 120);//diagonal backward right
-//  delay(2000);
-//  moveWheels('t', 120);//diagonal forward left
-//  delay(2000);
-//  moveWheels('g', 120);//diagonal backward left
-//  delay(2000);
-//  moveWheels('m', 120);//rotate right
-//  delay(2000);
-//  moveWheels('n', 120);//rotate left
-//  delay(2000);
-//  moveWheels('s', 120);//stop
-//  delay(2000);
-/********************/
+  //  maintain_Heading();
+  //  read_Nano();
+  //  angular_Motion(90, 120);
 }
