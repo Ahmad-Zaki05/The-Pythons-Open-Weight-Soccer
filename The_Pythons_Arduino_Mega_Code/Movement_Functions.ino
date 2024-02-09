@@ -1,3 +1,4 @@
+// jp2 --> left, jp1 --> right
 // Left Forward --> counter-clock   LOW
 // Left Back    --> counter-clock   LOW
 // Right Forward --> clock          HIGH
@@ -238,54 +239,54 @@ void angular_Motion(short b_angle, short spd) {
   }
 
   read_Nano();
-  
-  float headCorr = abs(setpoint - robot_heading) * 0.02;
-  
-  error = setpoint - robot_heading;
-  
-//  if (error < -8) { // 5 degrees right
-//    //    increase the speed of motors turning in the same direction as moving left
-//    if (l_f_d) l_f_sp += (int) (spd / 2);
-//    else l_f_sp -= (int) (spd / 3.2);
-//    if (l_b_d) l_b_sp += (int) (spd / 2);
-//    else l_b_sp -= (int) (spd / 3.2);
-//    if (r_f_d) r_f_sp += (int) (spd / 2);
-//    else r_f_sp -= (int) (spd / 3.2);
-//    if (r_b_d) r_b_sp += (int) (spd / 2);
-//    else r_b_sp -= (int) (spd / 3.2);
-//  }
-//  else if (error > 8) {
-//    if (!l_f_d) l_f_sp += (int) (spd / 2);
-//    else l_f_sp -= (int) (spd / 3.2);
-//    if (!l_b_d) l_b_sp += (int) (spd / 2);
-//    else l_b_sp -= (int) (spd / 3.2);
-//    if (!r_f_d) r_f_sp += (int) (spd / 2);
-//    else r_f_sp -= (int) (spd / 3.2);
-//    if (!r_b_d) r_b_sp += (int) (spd / 2);
-//    else r_b_sp -= (int) (spd / 3.2);
-//  }
 
-//  if (error < -8) { // 5 degrees right
-//    //    increase the speed of motors turning in the same direction as moving left
-//    if (l_f_d) l_f_sp += (int) (spd * headCorr);
-//    else l_f_sp -= (int) (spd * headCorr);
-//    if (l_b_d) l_b_sp += (int) (spd * headCorr);
-//    else l_b_sp -= (int) (spd * headCorr);
-//    if (r_f_d) r_f_sp += (int) (spd * headCorr);
-//    else r_f_sp -= (int) (spd * headCorr);
-//    if (r_b_d) r_b_sp += (int) (spd * headCorr);
-//    else r_b_sp -= (int) (spd * headCorr);
-//  }
-//  else if (error > 8) {
-//    if (!l_f_d) l_f_sp += (int) (spd * headCorr);
-//    else l_f_sp -= (int) (spd * headCorr);
-//    if (!l_b_d) l_b_sp += (int) (spd * headCorr);
-//    else l_b_sp -= (int) (spd * headCorr);
-//    if (!r_f_d) r_f_sp += (int) (spd * headCorr);
-//    else r_f_sp -= (int) (spd * headCorr);
-//    if (!r_b_d) r_b_sp += (int) (spd * headCorr);
-//    else r_b_sp -= (int) (spd * headCorr);
-//  }
+  float headCorr = abs(setpoint - robot_heading) * 0.02;
+
+  error = setpoint - robot_heading;
+
+  //  if (error < -8) { // 5 degrees right
+  //    //    increase the speed of motors turning in the same direction as moving left
+  //    if (l_f_d) l_f_sp += (int) (spd / 2);
+  //    else l_f_sp -= (int) (spd / 3.2);
+  //    if (l_b_d) l_b_sp += (int) (spd / 2);
+  //    else l_b_sp -= (int) (spd / 3.2);
+  //    if (r_f_d) r_f_sp += (int) (spd / 2);
+  //    else r_f_sp -= (int) (spd / 3.2);
+  //    if (r_b_d) r_b_sp += (int) (spd / 2);
+  //    else r_b_sp -= (int) (spd / 3.2);
+  //  }
+  //  else if (error > 8) {
+  //    if (!l_f_d) l_f_sp += (int) (spd / 2);
+  //    else l_f_sp -= (int) (spd / 3.2);
+  //    if (!l_b_d) l_b_sp += (int) (spd / 2);
+  //    else l_b_sp -= (int) (spd / 3.2);
+  //    if (!r_f_d) r_f_sp += (int) (spd / 2);
+  //    else r_f_sp -= (int) (spd / 3.2);
+  //    if (!r_b_d) r_b_sp += (int) (spd / 2);
+  //    else r_b_sp -= (int) (spd / 3.2);
+  //  }
+
+  //  if (error < -8) { // 5 degrees right
+  //    //    increase the speed of motors turning in the same direction as moving left
+  //    if (l_f_d) l_f_sp += (int) (spd * headCorr);
+  //    else l_f_sp -= (int) (spd * headCorr);
+  //    if (l_b_d) l_b_sp += (int) (spd * headCorr);
+  //    else l_b_sp -= (int) (spd * headCorr);
+  //    if (r_f_d) r_f_sp += (int) (spd * headCorr);
+  //    else r_f_sp -= (int) (spd * headCorr);
+  //    if (r_b_d) r_b_sp += (int) (spd * headCorr);
+  //    else r_b_sp -= (int) (spd * headCorr);
+  //  }
+  //  else if (error > 8) {
+  //    if (!l_f_d) l_f_sp += (int) (spd * headCorr);
+  //    else l_f_sp -= (int) (spd * headCorr);
+  //    if (!l_b_d) l_b_sp += (int) (spd * headCorr);
+  //    else l_b_sp -= (int) (spd * headCorr);
+  //    if (!r_f_d) r_f_sp += (int) (spd * headCorr);
+  //    else r_f_sp -= (int) (spd * headCorr);
+  //    if (!r_b_d) r_b_sp += (int) (spd * headCorr);
+  //    else r_b_sp -= (int) (spd * headCorr);
+  //  }
 
 
   if (error < -8) { // 5 degrees right
@@ -311,23 +312,23 @@ void angular_Motion(short b_angle, short spd) {
   }
 
 
-//  Serial.print("l_f_d = ");
-//  Serial.print(l_f_d);
-//  Serial.print("\tl_b_d = ");
-//  Serial.print(l_b_d);
-//  Serial.print("\tr_b_d = ");
-//  Serial.print(r_b_d);
-//  Serial.print("\tr_f_d = ");
-//  Serial.println(r_f_d);
-//
-//  Serial.print("l_f_sp = ");
-//  Serial.print(l_f_sp);
-//  Serial.print("\tl_b_sp = ");
-//  Serial.print(l_b_sp);
-//  Serial.print("\tr_b_sp = ");
-//  Serial.print(r_b_sp);
-//  Serial.print("\tr_f_sp = ");
-//  Serial.println(r_f_sp);
+  //  Serial.print("l_f_d = ");
+  //  Serial.print(l_f_d);
+  //  Serial.print("\tl_b_d = ");
+  //  Serial.print(l_b_d);
+  //  Serial.print("\tr_b_d = ");
+  //  Serial.print(r_b_d);
+  //  Serial.print("\tr_f_d = ");
+  //  Serial.println(r_f_d);
+  //
+  //  Serial.print("l_f_sp = ");
+  //  Serial.print(l_f_sp);
+  //  Serial.print("\tl_b_sp = ");
+  //  Serial.print(l_b_sp);
+  //  Serial.print("\tr_b_sp = ");
+  //  Serial.print(r_b_sp);
+  //  Serial.print("\tr_f_sp = ");
+  //  Serial.println(r_f_sp);
 
   digitalWrite(l_f_dir, l_f_d);
   analogWrite(l_f_pwm, min(250, max(0, l_f_sp)));
