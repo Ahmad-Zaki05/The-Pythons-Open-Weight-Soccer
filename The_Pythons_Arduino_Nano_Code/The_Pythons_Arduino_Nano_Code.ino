@@ -5,6 +5,8 @@
 //#include <Adafruit_Sensor.h>
 
 
+#define calib_button A2
+
 float yaw = 0.0, gyro_yaw = 0.0, mag_heading, init_mag_heading = 0.0, init_gz = 0.0, prev_yaw = 0.0;
 unsigned long long int timer;
 byte read_count = 0;
@@ -12,22 +14,53 @@ byte read_count = 0;
 //const float biasAlpha = 0.95;  // Bias estimation coefficient // small alpha --> more responsive // 0.65
 
 
+//#define left 2
+//#define right 3
+
 MPU9250 mpu;
 
+#define Offset 0, 0, 0, 0, 0, 0
+
 //Adafruit_SensorLab lab;
+/*
+  // Hard-iron calibration settings
+  const float hard_iron[3] = {
+  -114.62,  129.94,  38.92
+  };
+
+  // Soft-iron calibration settings
+  const float soft_iron[3][3] = {
+  {  1.247,  0.060, 0.228  },
+  {  0.060,  0.853, 0.178  },
+  {  0.228,  0.178, 1.018  }
+  };
+*/
+
+/*
+  // Hard-iron calibration settings
+  const float hard_iron[3] = {
+  411.74,  628.58,  -633.14
+  };
+
+  // Soft-iron calibration settings
+  const float soft_iron[3][3] = {
+  {  1.219, -0.422, 0.376  },
+  {  -0.422,  1.153, -0.178  },
+  {  0.376,  -0.178, 0.933  }
+  };
+*/
 
 // Hard-iron calibration settings
 const float hard_iron[3] = {
-  -114.62,  129.94,  38.92
+  9.665,  947.2,  -1113.815
 };
 
 // Soft-iron calibration settings
 const float soft_iron[3][3] = {
-  {  1.247,  0.060, 0.228  },
-  {  0.060,  0.853, 0.178  },
-  {  0.228,  0.178, 1.018  }
+  {  1.00,  0.00, 0.00  },
+  {  0.00,  1.00, 0.00  },
+  {  0.00,  0.00, 1.00  }
 };
-
 // Magnetic declination from magnetic-declination.com
 // East is positive ( ), west is negative (-)
 // mag_decl = ( /-)(deg   min/60   sec/3600)
@@ -38,6 +71,8 @@ void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200);
   Wire.begin();
+//  pinMode(left, OUTPUT);
+//  pinMode(right, OUTPUT);
 
   MPU9250Setting setting;
   setting.accel_fs_sel = ACCEL_FS_SEL::A16G;//2 4 8 16
@@ -51,11 +86,12 @@ void setup() {
 
   if (!mpu.setup(0x68, setting)) {  // change to your own address
     while (1) {
-      Serial.println("MPU connection failed. Please check your connection with `connection_check` example.");
+      //Serial.println("MPU connection failed. Please check your connection with `connection_check` example.");
       delay(5000);
     }
   }
-
+  
+  mpu.setGyroBias(-1.78, -0.67, -1.19);
   //  if (!mpu.setup(0x68)) {  // change to your own address
   //    while (1) {
   //      Serial.println("MPU connection failed. Please check your connection with `connection_check` example.");
@@ -66,9 +102,13 @@ void setup() {
   //mpu.setMagneticDeclination(4.883);//sidi gaber
 
   delay(1500);
+  timer = millis();
+  pinMode(LED_BUILTIN, OUTPUT);
+//  digitalWrite(LED_BUILTIN, HIGH);
 }
 
 void loop() {
+
 
   static float hi_cal[3];
 
@@ -82,6 +122,9 @@ void loop() {
     //    // Convert raw gyroscope data to degrees per second
     //    float gyroRateX = gyroX / 131.0; // Sensitivity for full scale range of +/- 250 degrees/s
 
+
+
+
     float gyroRateZ = mpu.getGyroZ();
 
     // Estimate and compensate for gyro bias using EMA
@@ -93,8 +136,8 @@ void loop() {
 
     if (read_count == 20) {
       init_gz /= 10;
-      Serial.print("/////////////// Initial Gyro Rate Z: ");
-      Serial.println(init_gz);
+      //Serial.print("/////////////// Initial Gyro Rate Z: ");
+      //Serial.println(init_gz);
     }
 
     //    if (read_count == 20) {
@@ -147,13 +190,15 @@ void loop() {
 
     if (read_count == 20) {
       if (mpu.update()) {
-        Serial.print("/////////////// Initial mag_heading: ");
-        Serial.println(mag_heading);
+        //Serial.print("/////////////// Initial mag_heading: ");
+        //Serial.println(mag_heading);
         init_mag_heading = mag_heading;
       }
     }
     // Subtract initial error
     mag_heading -= init_mag_heading;
+
+
 
     //  // Convert heading to 0..360 degrees
     //  if (heading < 0) {
@@ -166,17 +211,57 @@ void loop() {
 
 
     // Apply complementary filter to combine gyroscope and magnetometer readings
-    float alpha = 0.985; // Complementary filter coefficient // 0.98
+
+    
+    
+    float alpha = 0.975; // Complementary filter coefficient // 0.985
     yaw = alpha * gyro_yaw + (1 - alpha) * mag_heading;
+
+//    Serial.print(gyro_yaw);
+//    Serial.print("\t");
+//    Serial.print(mag_heading);
+//    Serial.print("\t");
+//    Serial.print(mpu.getYaw());
+//    Serial.print("\t");
+//    Serial.println(yaw);
+
+    //    if(millis() - timer > 10000 && yaw > -5 && yaw < 5){
+    //      timer = millis();
+    //      init_mag_heading = mag_heading;
+    //    }
 
     //    yaw += 360;
     //    yaw = (int)yaw % 360;
+   
+
+//    if(yaw > -8 && yaw < 8)
+//    {
+//      digitalWrite(left, LOW);
+//      digitalWrite(right, LOW);
+//    }
+//    else
+//    {
+//      if(yaw < -8)
+//      {
+//        digitalWrite(left, HIGH);
+//        digitalWrite(right, LOW);
+//      }
+//      else
+//      {   
+//        digitalWrite(left, LOW);
+//        digitalWrite(right, HIGH);
+//      }
+//    }
+    
     String yaw_str = String(yaw);
-    for (byte i = 0; i < yaw_str.length(); i++)
-    {
-      Serial.write(yaw_str.charAt(i));
-    }
-    Serial.write('\n');
+//    for (byte i = 0; i < yaw_str.length(); i++)
+//    {
+//      Serial.write(yaw_str.charAt(i));
+//    }
+//    Serial.write('\n');
+    Serial.println((int)yaw);
+
+    
     //    Serial.print("Robot_heading: ");
     //    Serial.println(yaw);
 
@@ -231,6 +316,13 @@ void loop() {
   ////    Serial.print(mpu.getMagZ()); Serial.println("");
   //  }
 
-
+//  if (digitalRead(calib_button)) {
+//    init_mag_heading = mag_heading;
+//    digitalWrite(LED_BUILTIN, HIGH);
+//    //gyroRateZ
+//  }
+//  else {
+//    digitalWrite(LED_BUILTIN, LOW);
+//  }
 
 }
