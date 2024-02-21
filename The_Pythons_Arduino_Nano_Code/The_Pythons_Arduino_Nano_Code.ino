@@ -19,7 +19,7 @@ byte read_count = 0;
 
 MPU9250 mpu;
 
-#define Offset 0, 0, 0, 0, 0, 0
+//#define Offset 0, 0, 0, 0, 0, 0
 
 //Adafruit_SensorLab lab;
 /*
@@ -49,10 +49,16 @@ MPU9250 mpu;
   {  0.376,  -0.178, 0.933  }
   };
 */
+//// Striker
+//// Hard-iron calibration settings
+//const float hard_iron[3] = {
+//  9.665,  947.2,  -1113.815
+//};
 
+// Keeper
 // Hard-iron calibration settings
 const float hard_iron[3] = {
-  9.665,  947.2,  -1113.815
+  -183.955,  1297.285,  -1422.065
 };
 
 // Soft-iron calibration settings
@@ -70,7 +76,9 @@ const float mag_decl = 4.883; // sidi gaber
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200);
+  //Serial.println("x");
   Wire.begin();
+  //Serial.println("here2");
 //  pinMode(left, OUTPUT);
 //  pinMode(right, OUTPUT);
 
@@ -83,15 +91,18 @@ void setup() {
   setting.gyro_dlpf_cfg = GYRO_DLPF_CFG::DLPF_41HZ;//3600 5 10 20 41 92 184 250
   setting.accel_fchoice = 0x01;
   setting.accel_dlpf_cfg = ACCEL_DLPF_CFG::DLPF_45HZ;//420 5 10 21 45 99 218HZ_0 218HZ_1
-
+  //Serial.println("here2.5");
   if (!mpu.setup(0x68, setting)) {  // change to your own address
     while (1) {
       //Serial.println("MPU connection failed. Please check your connection with `connection_check` example.");
       delay(5000);
     }
   }
-  
-  mpu.setGyroBias(-1.78, -0.67, -1.19);
+  else{
+    Serial.println("test");//test
+  }
+  //Serial.println("here3");
+  mpu.setGyroBias(-1.17, 2.76, 0.57); // -1.78, -0.67, -1.19
   //  if (!mpu.setup(0x68)) {  // change to your own address
   //    while (1) {
   //      Serial.println("MPU connection failed. Please check your connection with `connection_check` example.");
@@ -109,7 +120,7 @@ void setup() {
 
 void loop() {
 
-
+  //Serial.println("Here");
   static float hi_cal[3];
 
   if (read_count < 50)
