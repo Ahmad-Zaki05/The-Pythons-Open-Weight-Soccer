@@ -1,34 +1,46 @@
-import sensor, image, time, math
-from pyb import UART
+import sensor, image, time, math, pyb
+from pyb import Pin, UART
 sensor.reset()
 sensor.set_pixformat(sensor.RGB565)
 sensor.set_framesize(sensor.QVGA)
 sensor.skip_frames(time = 2000)
 sensor.set_auto_gain(False)
 sensor.set_auto_whitebal(False)
+sensor.set_auto_exposure(False)
 sensor.set_vflip(True)
-orangeThreshold = [(45, 70, 27, 90, 1, 63), (35, 71, 14, 76, 55, 71)] # bellel , (51, 74, 18, 81, 2, 62),
-yellowThreshold = [(32, 39, 9, 32, 16, 32), (29, 36, -4, 32, 16, 32)] # bellel
-#orangeThreshold = [(59, 80, 15, 64, 20, 41) , (64, 80, 23, 61, -33, 10)] # elsob7
-#yellowThreshold = [(36, 44, 8, 34, 21, 50), (32, 38, 10, 42, 18, 55)] # elsob7
+#orangeThreshold = [(45, 70, 27, 90, 1, 63), (35, 71, 14, 76, 55, 71)] # bellel , (51, 74, 18, 81, 2, 62),
+#yellowThreshold = [(32, 39, 9, 32, 16, 32), (29, 36, -4, 32, 16, 32)] # bellel
+orangeThreshold = [(57, 73, 32, 94, 19, 58), (60, 80, 30, 89, 8, 58)] # elsob7 # (60, 77, 30, 89, 8, 58)
+yellowThreshold = [(79, 85, 4, 24, 29, 56), (82, 93, -10, 16, 38, 57)] # elsob7
+blueThreshold = [(46, 57, -2, 18, -48, -25), (42, 57, -2, 18, -48, -25)] # elsob7
+goalThreshold = []
+pin0 = Pin("P0", Pin.IN, Pin.PULL_DOWN)
 uart = UART(3, 115200)
-camcx = 175
-camcy = 114
-dribcx = 176
-dribcy = 62
+camcx = 184
+camcy = 127
+dribcx = 184
+dribcy = 65
 flagBall = 0
 lastAngle = 0
 lastRadius = 0
+last_x = 0
+ball_min_x = camcx - 4 #153
+ball_max_x = camcx + 7 #162
 clock = time.clock()
 while(True):
     clock.tick()
     img = sensor.snapshot()
-    img.draw_circle(camcx, camcy, 50, color=(0,0,0), thickness=1, fill=True)
-    img.draw_circle(camcx, camcy, 155, color=(0,0,0), thickness=55, fill=False)
-    img.draw_circle(camcx, camcy, 185, color=(0,0,0), thickness=50, fill=False)
+    img.draw_circle(camcx, camcy, 60, color=(0,0,0), thickness=1, fill=True)
+    img.draw_circle(camcx, camcy, 160, color=(0,0,0), thickness=55, fill=False)
+    img.draw_circle(camcx, camcy, 200, color=(0,0,0), thickness=50, fill=False)
     img.draw_cross(dribcx, dribcy)
+    print("pin0: ", pin0.value())
+    if (pin0.value() == 0):
+        goalThreshold = yellowThreshold
+    else:
+        goalThreshold = blueThreshold
     orangeBlobs = img.find_blobs(orangeThreshold, pixels_threshold=5, area_threshold=5, merge=True)
-    yellowBlobs = img.find_blobs(yellowThreshold, pixels_threshold=20, area_threshold=20, merge=True)
+    goalBlobs = img.find_blobs(goalThreshold, pixels_threshold=20, area_threshold=20, merge=True)
     if orangeBlobs:
         ballBlob = max(orangeBlobs, key=lambda bL: bL.area())
         img.draw_edges(ballBlob.min_corners(), color=(255, 255, 255))
@@ -37,6 +49,7 @@ while(True):
         bRadius = (math.sqrt(((ballBlob.cy() - camcy) * (ballBlob.cy() - camcy)) + ((ballBlob.cx() - camcx) * (ballBlob.cx() - camcx))))
         lastAngle = cAngle
         lastRadius = bRadius
+        last_x = ballBlob.cx()
         print("bRadius: ", bRadius)
         if (cAngle >= 80 and cAngle <= 100):
             uart.write("B" + str(int(cAngle)) + "\n")
@@ -59,8 +72,8 @@ while(True):
 #        uart.write("S\n")
 #        print("S")
         if flagBall:
-            if yellowBlobs:
-                goalBlob = max(yellowBlobs, key=lambda bL: bL.area())
+            if goalBlobs:
+                goalBlob = max(goalBlobs, key=lambda bL: bL.area())
                 img.draw_edges(goalBlob.min_corners(), color=(0, 255, 255))
                 goalAngle = (math.atan2((goalBlob.cy() - camcy), (goalBlob.cx() - camcx)) * 180 / math.pi) + 180
                 goalRadius = (math.sqrt(((goalBlob.cy() - camcy) * (goalBlob.cy() - camcy)) + ((goalBlob.cx() - camcx) * (goalBlob.cx() - camcx))))
@@ -76,7 +89,8 @@ while(True):
             uart.write("S\n")
     print("last radius: ", lastRadius)
     print("last angle: ", lastAngle)
-    if(lastAngle > 60 and lastAngle < 120): #lastRadius < 75 and
+    print("last x", last_x)
+    if(ball_min_x < last_x and ball_max_x > last_x): #lastRadius < 75 and lastAngle > 80 and lastAngle < 100
         flagBall = 1
     else:
         flagBall = 0
