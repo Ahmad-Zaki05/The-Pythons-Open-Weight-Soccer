@@ -25,3 +25,19 @@ void calibrate_IRs () {
     motioneq();
   }
 }
+
+bool is_line_front() {
+  return (digitalRead(fb1) && !digitalRead(fb2));
+}
+
+bool is_line_back() {
+  return (!digitalRead(fb1) && digitalRead(fb2));
+}
+
+bool is_line_right() {
+  return (digitalRead(rl1) && !digitalRead(rl2));
+}
+
+bool is_line_left() {
+  return (!digitalRead(rl1) && digitalRead(rl2));
+}

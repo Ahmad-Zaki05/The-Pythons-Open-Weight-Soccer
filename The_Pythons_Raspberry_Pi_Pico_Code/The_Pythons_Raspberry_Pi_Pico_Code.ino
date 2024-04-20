@@ -39,6 +39,9 @@ int robot_heading = 0;
 
 float setpoint = 0.0; // Setpoint for the heading
 
+bool seeking = 0;
+byte ir_counter_f = 0, ir_counter_b = 0;
+
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200);
